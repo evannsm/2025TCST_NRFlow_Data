@@ -19,12 +19,14 @@ NR_dict_fast = {'1', 'nr_comp_0_quad_CH_2x.log';
              '7', 'nr_comp_0_quad_sawtooth_2x.log'};
 
 NR_dict_HS = {'1', 'nr_comp_0_quad_HELIX.log'; 
-             '2', 'nr_comp_0_quad_HELIX_2x.log'; 
-             '3', 'nr_comp_0_quad_HELIX_SPIN.log'; 
-             '4', 'nr_comp_0_quad_HELIX_SPIN_2x_circonly.log'; 
-             '5', 'nr_comp_0_quad_CHS.log'; 
-             '6', 'nr_comp_0_quad_CHS_2x_circonly.log'; 
-             '7', 'nr_comp_0_quad_CHS_2x_circyaw.log'};
+              '2', 'nr_comp_0_quad_HELIX_2x.log';
+              '3', 'nr_comp_0_quad_CHS.log'};
+
+NR_victory_lap_HS = {
+             '1', 'nr_comp_0_quad_HELIX_SPIN.log'; 
+             '2', 'nr_comp_0_quad_HELIX_SPIN_2x_circonly.log'; 
+             '3', 'nr_comp_0_quad_CHS_2x_circonly.log'}; 
+%              '4', 'nr_comp_0_quad_CHS_2x_circyaw.log'};
 
 MPC_dict_normal = {'1', 'mpc_CH.log'; 
               '2', 'mpc_CV.log'; 

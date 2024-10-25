@@ -40,12 +40,20 @@ for i = 1:7
     NR_df_log = load_log_data(NR_log_file_path);
     MPC_df_log = load_log_data(MPC_log_file_path);
 
+    nr_cutoff = 12;
+    mpc_cutoff = 7;
     if contains(NR, 'CH') || contains(NR, 'F8H')
-        plot_together(names, NR_df_log, MPC_df_log, 'xy', i, gca);
+        plot_together(names, NR_df_log, MPC_df_log, 'xy', i, gca, nr_cutoff, mpc_cutoff);
     elseif contains(NR, 'CV')
-        plot_together(names, NR_df_log, MPC_df_log, 'xz', i, gca);
+        NR_df_log.z = NR_df_log.z + .15;
+        nr_cutoff = 11;
+        plot_together(names, NR_df_log, MPC_df_log, 'xz', i, gca, nr_cutoff, mpc_cutoff);
     elseif contains(NR, 'F8VS') || contains(NR, 'F8VT')
-        plot_together(names, NR_df_log, MPC_df_log, 'yz', i, gca);
+        plot_together(names, NR_df_log, MPC_df_log, 'yz', i, gca, nr_cutoff, mpc_cutoff);
+    elseif contains(NR, 'triangle') || contains(NR, 'saw')
+        nr_cutoff = 5;
+        mpc_cutoff = nr_cutoff;
+        plot_together(names, NR_df_log, MPC_df_log, 'xy', i, gca, nr_cutoff, mpc_cutoff);
     end
 end
 
