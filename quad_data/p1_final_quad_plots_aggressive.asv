@@ -12,7 +12,7 @@ x_positions = [0.33 + x, 0.66 + y]; % Assuming each 2x2 block occupies ~1/3 of t
 
 % Draw vertical bars after each 2x2 block
 for x_pos = x_positions
-    annotation('line', [x_pos x_pos], [.00 1.00], 'Color', 'k', 'LineWidth', 1.8); % Draws a vertical black line
+    annotation('line', [x_pos x_pos], [.02 .95], 'Color', 'k', 'LineWidth', 1.3); % Draws a vertical black line
 end
 % Load data for each block
 for i = 1:3
@@ -21,44 +21,24 @@ for i = 1:3
 
     % Original names without underscores
     names = {strrep(NR(11:end-4), '_', ' '), strrep(MPC(1:end-4), '_', ' ')};
-    names(1) = strrep(names(1), 'quad', 'NR ');
-    names(2) = strrep(names(2), 'mpc ', 'MPC ');
-    disp(names)
+    names(1) = strrep(names(1), 'quad', 'NR');
+    
     % Create a mapping from abbreviations to full descriptions
-    mapping = containers.Map({'CH', 'CV', 'F8H', 'F8VS', 'F8VT', '2x', 'HELIX'}, ...
-                             {'Horizontal Circle', 'Vertical Circle', 'Horizontal Lemniscate', 'Vert Short Lemniscate', 'Vert Tall Lemniscate', '2x', 'Helix'});
+    mapping = containers.Map({'CH', 'CV', 'F8H', 'F8VS', 'F8VT', 'HX'}, ...
+                             {'Horizontal Circle', 'Vertical Circle', 'Horizontal Lemniscate', 'Vert Short Lemniscate', 'Vert Tall Lemniscate', 'Helix'});
 
     % Replace abbreviations in names
     for j = 1:length(names)
         name_parts = strsplit(names{j}, ' ');
-%         disp('here')
-%         disp(name_parts)
         if isKey(mapping, name_parts{2})
             if any(contains(name_parts, 'SPN'))
-                names{j} = [name_parts{1}, ': ', ' Spinning ', mapping(name_parts{2})];
+                names{j} = [name_parts{1}, ' Spinning ', mapping(name_parts{2})];
             else
                 names{j} = [name_parts{1}, ': ', mapping(name_parts{2})];
             end
-            if any(contains(name_parts, '2x'))
-                names{j} = [name_parts{1}, ': ', mapping(name_parts{2}), ' Double Speed'];
-            end
         end
     end
 
-    disp('here')
-    disp(names)
-    for k = 1:length(names)
-
-        name_parts = strsplit(names{k}, ' ');
-        disp('loop')
-        disp(name_parts)
-        if any(contains(name_parts, 'CHS'))
-            names{k} = [name_parts{1}, ': ',' Spin Circle'];
-        end
-
-    end
-    disp('done')
-    disp(names)
     % Define file paths
     NR_log_file_path = fullfile(nr_data_path, NR);
     MPC_log_file_path = fullfile(mpc_data_path, MPC);
@@ -104,7 +84,7 @@ function plot_data_section(block_idx, names, NR_df, MPC_df, is_chs)
     % Assign the tile indices for NR and MPC
     tile_NR = (block_idx - 1) * 2 + 1;
     tile_MPC = tile_NR + 6;
-%     disp(names)
+
     if is_chs
         % CHS-specific layout with x vs y and yaw vs time plots
         nexttile(tile_NR); % x vs y NR
@@ -118,21 +98,21 @@ function plot_data_section(block_idx, names, NR_df, MPC_df, is_chs)
         plot(NR_df.time, NR_df.yaw, 'r'); hold on;
         plot(NR_df.time, NR_df.yaw_ref, '--b');
         xlabel('Time (s)'); ylabel('Yaw (rad)');
-        title([names{1}]);
+        title(['Yaw vs time ', names{1}]);
         legend('NR', 'NR ref');
 
         nexttile(tile_MPC); % x vs y MPC
         plot(MPC_df.x, MPC_df.y, 'r'); hold on;
         plot(MPC_df.x_ref, MPC_df.y_ref, '--b');
         xlabel('x (m)'); ylabel('y (m)');
-        title([names{2}]);
+        title(['x vs y ', names{2}]);
         legend('MPC', 'MPC ref');
 
         nexttile(tile_MPC + 1); % yaw vs time MPC
         plot(MPC_df.time, MPC_df.yaw, 'r'); hold on;
         plot(MPC_df.time, MPC_df.yaw_ref, '--b');
         xlabel('Time (s)'); ylabel('Yaw (rad)');
-        title([names{2}]);
+        title(['Yaw vs time ', names{2}]);
         legend('MPC', 'MPC ref');
     else
         % Regular layout for Helix and Helix 2x
@@ -140,28 +120,28 @@ function plot_data_section(block_idx, names, NR_df, MPC_df, is_chs)
         plot(NR_df.x, NR_df.y, 'r'); hold on;
         plot(NR_df.x_ref, NR_df.y_ref, '--b');
         xlabel('x (m)'); ylabel('y (m)');
-        title([names{1}]);
+        title(['y vs x ', names{1}]);
         legend('NR', 'NR ref');
 
         nexttile(tile_NR + 1); % z vs x NR
         plot(NR_df.x, -NR_df.z, 'r'); hold on;
         plot(NR_df.x_ref, -NR_df.z_ref, '--b');
         xlabel('x (m)'); ylabel('z (m)');
-        title([names{1}]);
+        title(['z vs x ', names{1}]);
         legend('NR', 'NR ref');
 
         nexttile(tile_MPC); % y vs x MPC
         plot(MPC_df.x, MPC_df.y, 'r'); hold on;
         plot(MPC_df.x_ref, MPC_df.y_ref, '--b');
         xlabel('x (m)'); ylabel('y (m)');
-        title([names{2}]);
+        title(['y vs x ', names{2}]);
         legend('MPC', 'MPC ref');
 
         nexttile(tile_MPC + 1); % z vs x MPC
         plot(MPC_df.x, -MPC_df.z, 'r'); hold on;
         plot(MPC_df.x_ref, -MPC_df.z_ref, '--b');
         xlabel('x (m)'); ylabel('z (m)');
-        title([names{2}]);
+        title(['z vs x ', names{2}]);
         legend('MPC', 'MPC ref');
     end
 end
